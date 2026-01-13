@@ -6,6 +6,10 @@ Ralph is an autonomous AI agent loop that runs [Amp](https://ampcode.com) repeat
 
 Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
 
+## Credits
+
+This repository is forked from [Ryan Carson's implementation](https://github.com/snarktank/ralph). Full credit goes to Ryan Carson for building this implementation of the Ralph pattern.
+
 [Read my in-depth article on how I use Ralph](https://x.com/ryancarson/status/2008548371712135632)
 
 ## Prerequisites
