@@ -10,12 +10,10 @@ Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
 
 This repository is forked from [Ryan Carson's implementation](https://github.com/snarktank/ralph). Full credit goes to Ryan Carson for building this implementation of the Ralph pattern.
 
-[Read my in-depth article on how I use Ralph](https://x.com/ryancarson/status/2008548371712135632)
-
 ## Prerequisites
 
 - [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) installed and authenticated
-- `jq` installed (`brew install jq` on macOS)
+- `jq` installed (`brew install jq` on macOS, `pkg install jq` on Termux)
 - A git repository for your project
 
 ## Setup
@@ -97,6 +95,26 @@ Ralph will:
 | `skills/prd/` | Skill for generating PRDs |
 | `skills/ralph/` | Skill for converting PRDs to JSON |
 | `flowchart/` | Interactive visualization of how Ralph works |
+| `ralph-termux.sh` | Termux-compatible version of ralph.sh |
+
+## Termux Support
+
+Ralph works on Android via [Termux](https://termux.dev/). Use `ralph-termux.sh` instead of `ralph.sh`:
+
+```bash
+# Install dependencies
+pkg install jq
+
+# Run Ralph on Termux
+./ralph-termux.sh [max_iterations]
+```
+
+**Features of ralph-termux.sh:**
+- Dependency checks with clear installation instructions
+- Termux-compatible temp paths (`$PREFIX/tmp` instead of `/tmp`)
+- Automatic Termux environment detection
+
+**Note:** Running `ralph.sh` on Termux will display a warning suggesting `ralph-termux.sh`.
 
 ## Flowchart
 
