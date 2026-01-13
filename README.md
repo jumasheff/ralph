@@ -8,7 +8,11 @@ Based on [Geoffrey Huntley's Ralph pattern](https://ghuntley.com/ralph/).
 
 ## Credits
 
-This repository is forked from [Ryan Carson's implementation](https://github.com/snarktank/ralph). Full credit goes to Ryan Carson for building this implementation of the Ralph pattern.
+This repository is forked from [Ryan Carson's implementation](https://github.com/snarktank/ralph). Full credit goes to Ryan Carson for building this implementation of the Ralph pattern. See [Ryan's in-depth article on how he uses Ralph](https://x.com/ryancarson/status/2008548371712135632).
+
+**This fork adds:**
+- Adapted from Amp to [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- Termux (Android) support via `ralph-termux.sh`
 
 ## Prerequisites
 
