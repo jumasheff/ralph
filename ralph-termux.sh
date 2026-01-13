@@ -100,9 +100,9 @@ echo "Starting Ralph (Termux) - Max iterations: $MAX_ITERATIONS"
 
 for i in $(seq 1 $MAX_ITERATIONS); do
   echo ""
-  echo "═══════════════════════════════════════════════════════"
-  echo "  Ralph Iteration $i of $MAX_ITERATIONS"
-  echo "═══════════════════════════════════════════════════════"
+  echo "══════════════════════════════"
+  echo " Ralph: $i / $MAX_ITERATIONS"
+  echo "══════════════════════════════"
 
   # Run claude with the ralph prompt
   OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | claude --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
