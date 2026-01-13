@@ -15,11 +15,15 @@ cd flowchart && npm run build
 
 # Run Ralph (from your project that has prd.json)
 ./ralph.sh [max_iterations]
+
+# Run Ralph on Termux (Android)
+./ralph-termux.sh [max_iterations]
 ```
 
 ## Key Files
 
 - `ralph.sh` - The bash loop that spawns fresh Claude instances
+- `ralph-termux.sh` - Termux-compatible version with dependency checks
 - `prompt.md` - Instructions given to each Claude instance
 - `prd.json.example` - Example PRD format
 - `flowchart/` - Interactive React Flow diagram explaining how Ralph works
@@ -47,25 +51,21 @@ npm run dev
 **Branch:** `ralph/amp-to-claude-code-migration`
 
 **Completed:**
-- US-001: Updated flowchart references from Amp to Claude Code
-- US-002: Committed all migration changes
+- Amp to Claude Code migration (all references updated)
+- Termux compatibility (`ralph-termux.sh` created)
 
-**Migration Summary:**
-- Renamed `AGENTS.md` → `CLAUDE.md` (Claude Code convention)
-- Updated `README.md` with Claude Code references and credits
-- Updated `prompt.md` for Claude Code usage
-- Updated `skills/ralph/SKILL.md` for Claude Code
-- Updated `flowchart/src/App.tsx`:
-  - Title: "How Ralph Works with Claude Code"
-  - Node label: "Claude Code picks a story"
-  - Note: "Also updates CLAUDE.md with..."
-
-**PRD Location:** `tasks/prd-amp-to-claude-code-migration.md`
-**prd.json:** Both stories marked `passes: true`
+**Recent Work:**
+- Created `ralph-termux.sh` with dependency checks and Termux-compatible paths
+- Added Termux detection to `ralph.sh` (warns users to use `ralph-termux.sh`)
+- PRD: `tasks/prd-ralph-termux.md` (all 3 stories complete)
 
 ## Termux Notes
 
-- Running on Termux (Android) - `/tmp` is not accessible
-- Use `$PREFIX/tmp` for temp files
+- Use `ralph-termux.sh` instead of `ralph.sh` on Termux
+- `ralph-termux.sh` includes:
+  - Dependency checks for `jq` (install with `pkg install jq`)
+  - Termux-compatible temp paths (`$PREFIX/tmp`)
+  - Automatic Termux environment detection
+- Running `ralph.sh` on Termux will show a warning suggesting `ralph-termux.sh`
 - TypeScript check: `/data/data/com.termux/files/home/projects/ralph/flowchart/node_modules/.bin/tsc --noEmit -p /data/data/com.termux/files/home/projects/ralph/flowchart/tsconfig.json`
-- `ralph.sh` may not work in Termux due to nested Claude sandbox issues - implement stories manually instead
+- Note: Running Ralph inside Claude Code on Termux may not work due to nested sandbox issues - run `ralph-termux.sh` directly from terminal instead
