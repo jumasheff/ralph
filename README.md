@@ -113,6 +113,14 @@ pkg install jq
 ./ralph-termux.sh [max_iterations]
 ```
 
+> **Warning (Termux users):** It is recommended to install `proot` and run Claude Code after running `termux-chroot` to avoid issues with `/tmp` and other path-related problems. This also resolves Firebase issues when called from within Claude.
+>
+> ```bash
+> pkg install proot
+> termux-chroot
+> # Now run Claude Code or ralph-termux.sh
+> ```
+
 **Features of ralph-termux.sh:**
 - Dependency checks with clear installation instructions
 - Termux-compatible temp paths (`$PREFIX/tmp` instead of `/tmp`)
