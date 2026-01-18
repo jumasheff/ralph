@@ -135,8 +135,9 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "══════════════════════════════"
 
   # Run claude with the ralph prompt
+  # Use minimal shell environment to avoid slow shell initialization
   PROMPT=$(cat "$SCRIPT_DIR/prompt.md")
-  OUTPUT=$(claude -p "$PROMPT" --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
+  OUTPUT=$(SHELL=/bin/sh BASH_ENV="" ENV="" claude -p "$PROMPT" --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
 
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
