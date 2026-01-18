@@ -43,6 +43,36 @@ check_dependencies() {
 
 check_dependencies
 
+# --- Environment check for /tmp access ---
+check_tmp_access() {
+  if is_termux; then
+    # Try to create a temp file in /tmp to verify access
+    if ! touch /tmp/.ralph-test 2>/dev/null; then
+      echo ""
+      echo "Error: Cannot access /tmp directory."
+      echo ""
+      echo "Claude Code requires /tmp to be accessible. On Termux, you need to run"
+      echo "inside a chroot environment. Please use one of these options:"
+      echo ""
+      echo "  Option 1: termux-chroot (recommended)"
+      echo "    pkg install proot"
+      echo "    termux-chroot"
+      echo "    ./ralph-termux.sh"
+      echo ""
+      echo "  Option 2: proot with --link2symlink"
+      echo "    pkg install proot"
+      echo "    proot --link2symlink -0 /bin/sh"
+      echo "    ./ralph-termux.sh"
+      echo ""
+      exit 1
+    else
+      rm -f /tmp/.ralph-test 2>/dev/null
+    fi
+  fi
+}
+
+check_tmp_access
+
 # --- Termux-compatible paths ---
 # Use $PREFIX/tmp for temp files (standard /tmp is not accessible on Termux)
 TEMP_DIR="${PREFIX:-/data/data/com.termux/files/usr}/tmp"
@@ -105,7 +135,8 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "══════════════════════════════"
 
   # Run claude with the ralph prompt
-  OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | claude --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
+  PROMPT=$(cat "$SCRIPT_DIR/prompt.md")
+  OUTPUT=$(claude -p "$PROMPT" --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
 
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then

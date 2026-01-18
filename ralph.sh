@@ -71,7 +71,8 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "═══════════════════════════════════════════════════════"
   
   # Run claude with the ralph prompt
-  OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | claude --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
+  PROMPT=$(cat "$SCRIPT_DIR/prompt.md")
+  OUTPUT=$(claude -p "$PROMPT" --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
