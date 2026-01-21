@@ -13,6 +13,7 @@ This repository is forked from [Ryan Carson's implementation](https://github.com
 **This fork adds:**
 - Adapted from Amp to [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 - Termux (Android) support via `ralph-termux.sh`
+- [OpenCode](https://opencode.ai/) support via `ralph-opencode.sh` and `ralph-opencode-termux.sh`
 
 ## Prerequisites
 
@@ -100,6 +101,40 @@ Ralph will:
 | `skills/ralph/` | Skill for converting PRDs to JSON |
 | `flowchart/` | Interactive visualization of how Ralph works |
 | `ralph-termux.sh` | Termux-compatible version of ralph.sh |
+| `ralph-opencode.sh` | OpenCode version of ralph.sh |
+| `ralph-opencode-termux.sh` | OpenCode version for Termux |
+| `opencode.json` | OpenCode config (equivalent to `--dangerously-skip-permissions`) |
+
+## OpenCode Support
+
+Ralph also supports [OpenCode](https://opencode.ai/) as an alternative to Claude Code. Use the OpenCode scripts:
+
+```bash
+# Standard environments
+./ralph-opencode.sh [max_iterations]
+
+# Termux (Android)
+./ralph-opencode-termux.sh [max_iterations]
+```
+
+**Prerequisites for OpenCode:**
+- OpenCode CLI installed (`npm install -g @opencode-ai/cli`)
+- `jq` installed
+
+### Permissions (opencode.json)
+
+OpenCode doesn't have a `--dangerously-skip-permissions` flag like Claude Code. Instead, include `opencode.json` in your project root:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "*": "allow"
+  }
+}
+```
+
+This allows OpenCode to run autonomously without permission prompts, equivalent to Claude Code's `--dangerously-skip-permissions` flag.
 
 ## Termux Support
 
