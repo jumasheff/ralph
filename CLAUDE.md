@@ -18,12 +18,16 @@ cd flowchart && npm run build
 
 # Run Ralph on Termux (Android)
 ./ralph-termux.sh [max_iterations]
+
+# Run Ralph OpenCode on Termux
+./ralph-opencode-termux.sh [max_iterations]
 ```
 
 ## Key Files
 
 - `ralph.sh` - The bash loop that spawns fresh Claude instances
 - `ralph-termux.sh` - Termux-compatible version with dependency checks
+- `ralph-opencode-termux.sh` - OpenCode version for Termux
 - `prompt.md` - Instructions given to each Claude instance
 - `prd.json.example` - Example PRD format
 - `flowchart/` - Interactive React Flow diagram explaining how Ralph works
@@ -55,6 +59,7 @@ npm run dev
 - Termux compatibility (`ralph-termux.sh` created)
 
 **Recent Work:**
+- Created `ralph-opencode-termux.sh` (US-001)
 - Created `ralph-termux.sh` with dependency checks and Termux-compatible paths
 - Added Termux detection to `ralph.sh` (warns users to use `ralph-termux.sh`)
 - PRD: `tasks/prd-ralph-termux.md` (all 3 stories complete)
