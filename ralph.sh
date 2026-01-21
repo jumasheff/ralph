@@ -15,7 +15,17 @@ if is_termux; then
   echo ""
 fi
 
-MAX_ITERATIONS=${1:-10}
+MAX_ITERATIONS=10
+USE_OPENCODE=false
+
+for arg in "$@"; do
+  if [[ "$arg" == "--opencode" ]]; then
+    USE_OPENCODE=true
+  elif [[ "$arg" =~ ^[0-9]+$ ]]; then
+    MAX_ITERATIONS="$arg"
+  fi
+done
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PRD_FILE="$SCRIPT_DIR/prd.json"
 PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
@@ -70,10 +80,17 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "  Ralph Iteration $i of $MAX_ITERATIONS"
   echo "═══════════════════════════════════════════════════════"
   
-  # Run claude with the ralph prompt
-  # Use minimal shell environment to avoid slow shell initialization
+  # Run the selected tool with the ralph prompt
   PROMPT=$(cat "$SCRIPT_DIR/prompt.md")
-  OUTPUT=$(SHELL=/bin/sh BASH_ENV="" ENV="" claude -p "$PROMPT" --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
+  
+  if [ "$USE_OPENCODE" = true ]; then
+    # Use opencode
+    OUTPUT=$(opencode run "$PROMPT" 2>&1 | tee /dev/stderr) || true
+  else
+    # Use claude (default)
+    # Use minimal shell environment to avoid slow shell initialization
+    OUTPUT=$(SHELL=/bin/sh BASH_ENV="" ENV="" claude -p "$PROMPT" --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
+  fi
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then

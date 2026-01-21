@@ -49,20 +49,22 @@ npm run dev
 - Memory persists via git history, `progress.txt`, and `prd.json`
 - Stories should be small enough to complete in one context window
 - Always update CLAUDE.md with discovered patterns for future iterations
+- Use `opencode run "$PROMPT"` for non-interactive execution of opencode CLI
 
-## Current State (2026-01-14)
+## Current State (2026-01-21)
 
-**Branch:** `ralph/amp-to-claude-code-migration`
+**Branch:** `ralph/unified-ralph-opencode`
 
 **Completed:**
-- Amp to Claude Code migration (all references updated)
-- Termux compatibility (`ralph-termux.sh` created)
+- Created `tasks/prd-ralph-unified.md` for refactoring `ralph.sh` to support `--opencode`
+- Archived old PRD artifacts (`prd.json`, `progress.txt`, `prd-ralph-opencode-termux.md`)
 
 **Recent Work:**
-- Created `ralph-opencode-termux.sh` (US-001)
+- Created `ralph-opencode-termux.sh`
 - Created `ralph-termux.sh` with dependency checks and Termux-compatible paths
-- Added Termux detection to `ralph.sh` (warns users to use `ralph-termux.sh`)
-- PRD: `tasks/prd-ralph-termux.md` (all 3 stories complete)
+- Added Termux detection to `ralph.sh`
+- Archived completed stories for `ralph-opencode-termux.sh`
+- Planning `ralph.sh` unification with OpenCode support
 
 ## Termux Notes
 
