@@ -21,8 +21,8 @@ check_dependencies() {
     missing+=("jq")
   fi
 
-  if ! command -v claude &> /dev/null; then
-    missing+=("claude")
+  if ! command -v opencode &> /dev/null; then
+    missing+=("opencode")
   fi
 
   if [ ${#missing[@]} -ne 0 ]; then
@@ -32,8 +32,8 @@ check_dependencies() {
         jq)
           echo "  - jq is required. Install with: pkg install jq"
           ;;
-        claude)
-          echo "  - claude is required. Install Claude Code CLI"
+        opencode)
+          echo "  - opencode is required. Install with: npm install -g @opencode-sh/cli"
           ;;
       esac
     done
