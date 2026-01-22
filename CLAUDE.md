@@ -51,15 +51,18 @@ npm run dev
 - Always update CLAUDE.md with discovered patterns for future iterations
 - Use `opencode run "$PROMPT"` for non-interactive execution of opencode CLI
 
-## Current State (2026-01-21)
+## Current State (2026-01-22)
 
 **Branch:** `ralph/unified-ralph-opencode`
 
 **Completed:**
 - Created `tasks/prd-ralph-unified.md` for refactoring `ralph.sh` to support `--opencode`
 - Archived old PRD artifacts (`prd.json`, `progress.txt`, `prd-ralph-opencode-termux.md`)
+- **US-001:** Added `--opencode` flag to `ralph.sh`
+- **US-002:** Abstracted tool execution in `ralph.sh`
 
 **Recent Work:**
+- Refactoring `ralph.sh` to support both `claude` and `opencode` backends seamlessly
 - Created `ralph-opencode-termux.sh`
 - Created `ralph-termux.sh` with dependency checks and Termux-compatible paths
 - Added Termux detection to `ralph.sh`

@@ -74,6 +74,18 @@ fi
 
 echo "Starting Ralph - Max iterations: $MAX_ITERATIONS"
 
+run_agent() {
+  local prompt="$1"
+  if [ "$USE_OPENCODE" = true ]; then
+    # Use opencode
+    opencode run "$prompt"
+  else
+    # Use claude (default)
+    # Use minimal shell environment to avoid slow shell initialization
+    SHELL=/bin/sh BASH_ENV="" ENV="" claude -p "$prompt" --dangerously-skip-permissions
+  fi
+}
+
 for i in $(seq 1 $MAX_ITERATIONS); do
   echo ""
   echo "═══════════════════════════════════════════════════════"
@@ -83,14 +95,7 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   # Run the selected tool with the ralph prompt
   PROMPT=$(cat "$SCRIPT_DIR/prompt.md")
   
-  if [ "$USE_OPENCODE" = true ]; then
-    # Use opencode
-    OUTPUT=$(opencode run "$PROMPT" 2>&1 | tee /dev/stderr) || true
-  else
-    # Use claude (default)
-    # Use minimal shell environment to avoid slow shell initialization
-    OUTPUT=$(SHELL=/bin/sh BASH_ENV="" ENV="" claude -p "$PROMPT" --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
-  fi
+  OUTPUT=$(run_agent "$PROMPT" 2>&1 | tee /dev/stderr) || true
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
