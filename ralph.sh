@@ -26,6 +26,21 @@ for arg in "$@"; do
   fi
 done
 
+# Check for required tools
+if [ "$USE_OPENCODE" = true ]; then
+  if ! command -v opencode &> /dev/null; then
+    echo "Error: 'opencode' CLI not found."
+    echo "Please install it or ensure it is in your PATH."
+    exit 1
+  fi
+else
+  if ! command -v claude &> /dev/null; then
+    echo "Error: 'claude' CLI not found."
+    echo "Please install it or ensure it is in your PATH."
+    exit 1
+  fi
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PRD_FILE="$SCRIPT_DIR/prd.json"
 PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
