@@ -2,7 +2,7 @@
 # Ralph Wiggum - Long-running AI agent loop (Termux version)
 # Usage: ./ralph-opencode-termux.sh [max_iterations]
 
-set -e
+# Note: Not using set -e because we handle errors explicitly
 
 # --- Termux detection ---
 is_termux() {
@@ -129,14 +129,34 @@ for i in $(seq 1 $MAX_ITERATIONS); do
 
   # Run opencode with the ralph prompt
   PROMPT=$(cat "$SCRIPT_DIR/prompt.md")
-  OUTPUT=$(opencode run "$PROMPT" 2>&1 | tee /dev/stderr) || true
+  OUTPUT_FILE="$TEMP_DIR/ralph-output-$i.txt"
+
+  # Run opencode and capture output to file
+  # Note: tee doesn't work well on Termux, so we capture then display
+  opencode run "$PROMPT" > "$OUTPUT_FILE" 2>&1
+  EXIT_CODE=$?
+
+  # Display the output
+  cat "$OUTPUT_FILE"
+
+  echo ""
+  echo "[Ralph] opencode exited with code: $EXIT_CODE"
 
   # Check for completion signal
-  if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
+  if grep -q "<promise>COMPLETE</promise>" "$OUTPUT_FILE" 2>/dev/null; then
     echo ""
     echo "Ralph completed all tasks!"
     echo "Completed at iteration $i of $MAX_ITERATIONS"
+    rm -f "$OUTPUT_FILE"
     exit 0
+  fi
+
+  # Clean up output file
+  rm -f "$OUTPUT_FILE"
+
+  # Check if opencode failed
+  if [ "$EXIT_CODE" -ne 0 ]; then
+    echo "[Ralph] Warning: opencode returned non-zero exit code, but continuing..."
   fi
 
   echo "Iteration $i complete. Continuing..."

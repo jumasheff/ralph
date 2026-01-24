@@ -137,15 +137,23 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   # Run claude with the ralph prompt
   # Use minimal shell environment to avoid slow shell initialization
   PROMPT=$(cat "$SCRIPT_DIR/prompt.md")
-  OUTPUT=$(SHELL=/bin/sh BASH_ENV="" ENV="" claude -p "$PROMPT" --dangerously-skip-permissions 2>&1 | tee /dev/stderr) || true
+  OUTPUT_FILE="$TEMP_DIR/ralph-output-$i.txt"
+
+  # Capture output to file, then display (tee doesn't work well on Termux)
+  SHELL=/bin/sh BASH_ENV="" ENV="" claude -p "$PROMPT" --dangerously-skip-permissions > "$OUTPUT_FILE" 2>&1 || true
+  cat "$OUTPUT_FILE"
 
   # Check for completion signal
-  if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
+  if grep -q "<promise>COMPLETE</promise>" "$OUTPUT_FILE" 2>/dev/null; then
     echo ""
     echo "Ralph completed all tasks!"
     echo "Completed at iteration $i of $MAX_ITERATIONS"
+    rm -f "$OUTPUT_FILE"
     exit 0
   fi
+
+  # Clean up output file
+  rm -f "$OUTPUT_FILE"
 
   echo "Iteration $i complete. Continuing..."
   sleep 2
