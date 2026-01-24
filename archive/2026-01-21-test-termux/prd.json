@@ -1,0 +1,53 @@
+{
+  "project": "Ralph",
+  "branchName": "ralph/ralph-opencode-termux",
+  "description": "Create standalone script ralph-opencode-termux.sh for OpenCode on Termux",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Create script scaffolding and Termux checks",
+      "description": "As a user, I want a script that validates it is running on Termux and has the correct environment permissions.",
+      "acceptanceCriteria": [
+        "Create ralph-opencode-termux.sh (copy of ralph-termux.sh as base)",
+        "Verify is_termux function works",
+        "Verify check_tmp_access logic (using $PREFIX/tmp)",
+        "Script is executable",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Adapt dependency checks for OpenCode",
+      "description": "As a user, I want the script to verify I have the opencode CLI installed instead of claude.",
+      "acceptanceCriteria": [
+        "Remove check for claude",
+        "Add check for opencode CLI",
+        "Provide helpful installation instructions if missing",
+        "Keep jq check",
+        "Verify bash syntax with bash -n",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Implement OpenCode Agent Loop",
+      "description": "As a user, I want the script to invoke opencode in a loop to process the Ralph prompt.",
+      "acceptanceCriteria": [
+        "Replace claude -p call with opencode run",
+        "Capture output correctly for the completion signal <promise>COMPLETE</promise>",
+        "Ensure the prompt is passed correctly from prompt.md",
+        "Maintain loop logic (max iterations, progress logging)",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

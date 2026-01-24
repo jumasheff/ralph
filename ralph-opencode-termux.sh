@@ -1,8 +1,8 @@
 #!/bin/bash
 # Ralph Wiggum - Long-running AI agent loop (Termux version)
-# Usage: ./ralph-termux.sh [max_iterations]
+# Usage: ./ralph-opencode-termux.sh [max_iterations]
 
-set -e
+# Note: Not using set -e because we handle errors explicitly
 
 # --- Termux detection ---
 is_termux() {
@@ -21,8 +21,8 @@ check_dependencies() {
     missing+=("jq")
   fi
 
-  if ! command -v claude &> /dev/null; then
-    missing+=("claude")
+  if ! command -v opencode &> /dev/null; then
+    missing+=("opencode")
   fi
 
   if [ ${#missing[@]} -ne 0 ]; then
@@ -32,8 +32,8 @@ check_dependencies() {
         jq)
           echo "  - jq is required. Install with: pkg install jq"
           ;;
-        claude)
-          echo "  - claude is required. Install Claude Code CLI"
+        opencode)
+          echo "  - opencode is required. Install with: npm install -g @opencode-sh/cli"
           ;;
       esac
     done
@@ -46,27 +46,20 @@ check_dependencies
 # --- Environment check for /tmp access ---
 check_tmp_access() {
   if is_termux; then
-    # Try to create a temp file in /tmp to verify access
-    if ! touch /tmp/.ralph-test 2>/dev/null; then
+    # Use Termux-compatible temp directory
+    local termux_tmp="${PREFIX:-/data/data/com.termux/files/usr}/tmp"
+    mkdir -p "$termux_tmp"
+
+    # Try to create a temp file in the Termux temp dir to verify access
+    if ! touch "$termux_tmp/.ralph-test" 2>/dev/null; then
       echo ""
-      echo "Error: Cannot access /tmp directory."
-      echo ""
-      echo "Claude Code requires /tmp to be accessible. On Termux, you need to run"
-      echo "inside a chroot environment. Please use one of these options:"
-      echo ""
-      echo "  Option 1: termux-chroot (recommended)"
-      echo "    pkg install proot"
-      echo "    termux-chroot"
-      echo "    ./ralph-termux.sh"
-      echo ""
-      echo "  Option 2: proot with --link2symlink"
-      echo "    pkg install proot"
-      echo "    proot --link2symlink -0 /bin/sh"
-      echo "    ./ralph-termux.sh"
-      echo ""
+      echo "Error: Cannot access $termux_tmp directory."
+      echo "Please check your Termux permissions."
       exit 1
     else
-      rm -f /tmp/.ralph-test 2>/dev/null
+      rm -f "$termux_tmp/.ralph-test" 2>/dev/null
+      # Export TMPDIR for subsequent commands
+      export TMPDIR="$termux_tmp"
     fi
   fi
 }
@@ -134,14 +127,20 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo " Ralph: $i / $MAX_ITERATIONS"
   echo "══════════════════════════════"
 
-  # Run claude with the ralph prompt
-  # Use minimal shell environment to avoid slow shell initialization
+  # Run opencode with the ralph prompt
   PROMPT=$(cat "$SCRIPT_DIR/prompt.md")
   OUTPUT_FILE="$TEMP_DIR/ralph-output-$i.txt"
 
-  # Capture output to file, then display (tee doesn't work well on Termux)
-  SHELL=/bin/sh BASH_ENV="" ENV="" claude -p "$PROMPT" --dangerously-skip-permissions > "$OUTPUT_FILE" 2>&1 || true
+  # Run opencode and capture output to file
+  # Note: tee doesn't work well on Termux, so we capture then display
+  opencode run "$PROMPT" > "$OUTPUT_FILE" 2>&1
+  EXIT_CODE=$?
+
+  # Display the output
   cat "$OUTPUT_FILE"
+
+  echo ""
+  echo "[Ralph] opencode exited with code: $EXIT_CODE"
 
   # Check for completion signal
   if grep -q "<promise>COMPLETE</promise>" "$OUTPUT_FILE" 2>/dev/null; then
@@ -154,6 +153,11 @@ for i in $(seq 1 $MAX_ITERATIONS); do
 
   # Clean up output file
   rm -f "$OUTPUT_FILE"
+
+  # Check if opencode failed
+  if [ "$EXIT_CODE" -ne 0 ]; then
+    echo "[Ralph] Warning: opencode returned non-zero exit code, but continuing..."
+  fi
 
   echo "Iteration $i complete. Continuing..."
   sleep 2

@@ -1,0 +1,15 @@
+# Ralph Progress Log
+## Codebase Patterns
+- Termux: Use `${PREFIX:-/data/data/com.termux/files/usr}/tmp` for temp directory and export `TMPDIR`.
+
+Started: Wed Jan 21 15:42:23 UTC 2026
+---
+## 2026-01-21 - US-002
+- Implemented dependency checks for `opencode` CLI in `ralph-opencode-termux.sh`.
+- Removed `claude` check.
+- Verified error messages and success path.
+- Files changed: `ralph-opencode-termux.sh`.
+- **Learnings for future iterations:**
+  - `opencode` binary is available in the path (e.g., `/root/.opencode/bin/opencode`).
+  - `bash -n` is a quick way to verify script syntax.
+---

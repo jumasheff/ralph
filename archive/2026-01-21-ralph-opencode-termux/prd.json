@@ -1,0 +1,50 @@
+{
+  "project": "Ralph",
+  "branchName": "ralph/unified-ralph-opencode",
+  "description": "Refactor ralph.sh to support an optional --opencode flag for using the opencode CLI tool as an alternative backend while maintaining claude as the default.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Support --opencode flag in ralph.sh",
+      "description": "As a user, I want to run Ralph using the opencode CLI by passing a flag so that I can use my preferred AI agent tool.",
+      "acceptanceCriteria": [
+        "./ralph.sh --opencode triggers the loop using the opencode command.",
+        "./ralph.sh (without flag) continues to use the claude command.",
+        "The flag can be placed before or after the max_iterations argument.",
+        "Script successfully parses the flag and identifies the target tool.",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Dynamic Tool Execution",
+      "description": "As a developer, I want the script to abstract the tool invocation so that it correctly passes the prompt and iterations regardless of the backend.",
+      "acceptanceCriteria": [
+        "The claude command is called with its specific flags (-p \"$PROMPT\" --dangerously-skip-permissions).",
+        "The opencode command is called with its specific flags (likely -p \"$PROMPT\" or similar, to be verified).",
+        "Completion signal (<promise>COMPLETE</promise>) is correctly captured for both tools.",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Dependency Validation",
+      "description": "As a user, I want the script to tell me if I'm missing the required CLI tool before starting the loop.",
+      "acceptanceCriteria": [
+        "If claude is selected (default) but not found, exit with error: \"Error: 'claude' CLI not found.\"",
+        "If --opencode is selected but not found, exit with error: \"Error: 'opencode' CLI not found.\"",
+        "Error messages provide basic guidance on what is missing.",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
